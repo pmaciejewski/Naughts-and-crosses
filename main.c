@@ -129,9 +129,15 @@ main ()
   int p1[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
   int  win = 0;
  int  pole, remis, tryb;
+ WINDOW *menu,*plansza;
 	initscr();
-  printw ("Wesoła gra w kółko i krzyżyk. \n Single player - wciśnij 1\n multiplayer - wciśnij 2");
-scanw ("%d", &tryb);
+	menu = newwin (5,35,10,10);
+	wborder (menu, '|', '|','-','-','+','+','+','+');
+	wrefresh(menu);
+  	mvwprintw (menu,1,2,"Wesola gra w kolko i krzyzyk.");
+	mvwprintw (menu, 2,3,"single player - wcisnij 1");
+       	mvwprintw (menu, 3,3, "multiplayer - wcisnij 2");
+wscanw (menu,"%d", &tryb);
 
 
  
@@ -175,6 +181,7 @@ scanw ("%d", &tryb);
 	rysuj(p1);  
 	break;
 	}
+      refresh();
     }
   if (win == 1)
     {
@@ -184,5 +191,7 @@ scanw ("%d", &tryb);
     {
       printw ("Gratulacje! Gracz 2 wygrywa!\n");
     }
+  getch();
+  endwin();
   return 0;
 }
