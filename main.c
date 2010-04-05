@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
+#include<ncurses/ncurses.h>
 
 /* rysowanie wykresu */
 
@@ -26,11 +27,11 @@ void rysuj (int *p)
 	  }
       }
 
-    printf (" %c | %c | %c \n", znak[0], znak[1], znak[2]);
-    printf ("---+---+----\n");
-    printf (" %c | %c | %c \n", znak[3], znak[4], znak[5]);
-    printf ("---+---+----\n");
-    printf (" %c | %c | %c \n", znak[6], znak[7], znak[8]);
+    printw (" %c | %c | %c \n", znak[0], znak[1], znak[2]);
+    printw ("---+---+----\n");
+    printw (" %c | %c | %c \n", znak[3], znak[4], znak[5]);
+    printw ("---+---+----\n");
+    printw (" %c | %c | %c \n", znak[6], znak[7], znak[8]);
   }
 
 /* wyczytywanie ruchu */
@@ -50,8 +51,8 @@ void rysuj (int *p)
       }
     else
       {
-	printf ("Gracz %d! Złe pole, podaj jeszcze raz:", gracz);
-	scanf ("%d", &pole);
+	printw ("Gracz %d! Złe pole, podaj jeszcze raz:", gracz);
+	scanw ("%d", &pole);
      wczytaj(gracz, pole, p);
       }
      }
@@ -125,10 +126,12 @@ main ()
 {
 
 
-  int p1[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 }, win = 0, pole, remis, tryb;
-
-  printf ("Wesoła gra w kółko i krzyżyk. \n Single player - wciśnij 1\n multiplayer - wciśnij 2");
-  scanf ("%d", &tryb);
+  int p1[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  int  win = 0;
+ int  pole, remis, tryb;
+	initscr();
+  printw ("Wesoła gra w kółko i krzyżyk. \n Single player - wciśnij 1\n multiplayer - wciśnij 2");
+scanw ("%d", &tryb);
 
 
  
@@ -136,12 +139,12 @@ main ()
     {
 
       rysuj(p1);
-      printf ("Gracz 1, podaj pole [1-9]: ");
-      scanf ("%d", &pole);
+      printw ("Gracz 1, podaj pole [1-9]: ");
+      scanw ("%d", &pole);
       wczytaj (1, pole, p1);
       remis++;
       if (remis == 9) {
-	      printf ("Remis\n");
+	      printw ("Remis\n");
 	      break;
       }
       
@@ -154,8 +157,8 @@ main ()
       
       if (tryb == 2) {
       rysuj(p1); //rysuje planszę po ruchu pierwszego gracza tylko jak jest multiplayer
-      printf ("Gracz 2, podaj pole [1-9]:");
-      scanf ("%d", &pole);
+      printw ("Gracz 2, podaj pole [1-9]:");
+      scanw ("%d", &pole);
       wczytaj(2,pole, p1);
       }
       if (tryb == 1) {
@@ -164,7 +167,7 @@ main ()
       win = test (2, p1);
       remis++;
       if (remis == 9) {
-	      printf ("Remis\n");
+	      printw ("Remis\n");
 	      break;
       }
       if (win > 0)
@@ -175,11 +178,11 @@ main ()
     }
   if (win == 1)
     {
-      printf ("Gratulacje! Gracz 1, wygrałeś.\n");
+      printw ("Gratulacje! Gracz 1, wygrałeś.\n");
     }
   if (win == 2)
     {
-      printf ("Gratulacje! Gracz 2 wygrywa!\n");
+      printw ("Gratulacje! Gracz 2 wygrywa!\n");
     }
   return 0;
 }
