@@ -25,11 +25,11 @@ void rysuj(int *p)
 	}
     }
     move(1,0);
-    printw(" %c | %c | %c \n", znak[0], znak[1], znak[2]);
-    printw("---+---+----\n");
-    printw(" %c | %c | %c \n", znak[3], znak[4], znak[5]);
-    printw("---+---+----\n");
-    printw(" %c | %c | %c \n", znak[6], znak[7], znak[8]);
+    printw("%c|%c|%c\n", znak[0], znak[1], znak[2]);
+    printw("-+-+-\n");
+    printw("%c|%c|%c\n", znak[3], znak[4], znak[5]);
+    printw("-+-+-\n");
+    printw("%c|%c|%c\n", znak[6], znak[7], znak[8]);
 }
 
 /* wyczytywanie ruchu */
@@ -100,6 +100,9 @@ int test(int gracz, int *p)
     return win;
 }
 
+void menu() {
+}
+
 void pc1(int *p)		//zrobilem z tego voida, bo nie musi zwracac wyniku, moze go od razu w funkcji zapisac
 {
     int pole;
@@ -114,12 +117,15 @@ void pc1(int *p)		//zrobilem z tego voida, bo nie musi zwracac wyniku, moze go o
 }
 int main()
 {
-
+    const int ENTER = 0xa;
     int p1[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     int win = 0;
     int pole, remis, tryb, i;
+    int ch, x=2,y=2; //do operacji na kursorze
     WINDOW *menu;
     initscr();
+    cbreak();
+    keypad(stdscr,true); //do zabawy kursorem
     menu = newwin(6, 35, 10, 10);
     start_color();
     init_pair(1, COLOR_BLUE, COLOR_RED);
@@ -136,7 +142,7 @@ int main()
     mvwprintw(menu, 3, 3, "multiplayer - wcisnij 2");
     wscanw(menu, "%d", &tryb);
     /* sprawdzanie poprawności wyboru z menu */
-    while (1) {
+    while (1){
 	if (tryb == 1 || tryb == 2) {
 	    break;
 	} else {
@@ -145,7 +151,42 @@ int main()
 	}
     }
     while (remis < 9) {
+		rysuj(p1);
+		move(y,x);
 
+	while ((ch = getch()) != 0xa) { // 0xa - enter
+	ch = getch();
+		switch(ch) {
+			case KEY_LEFT:
+			x--;
+			move(y,x);
+			refresh();
+			break;
+			case KEY_RIGHT:
+	      		x++;
+			move(y,x);
+			refresh();
+			break;
+			case KEY_UP:
+			y--;
+			move(y,x);
+			refresh();
+			break;
+			case KEY_DOWN:
+			y++;
+			move(y,x);
+			refresh();
+			break;
+			case 0xa:
+			getyx(stdscr,x,y);// do rozkminienia
+			printw ("x = %d, y = %d", x,y);
+			refresh();
+			break;
+		}
+		
+	}
+	printw ("x = %d, y = %d", x, y);
+	refresh();
 	rysuj(p1);
 	printw("Gracz 1, podaj pole [1-9]: ");
 	scanw("%d", &pole);
