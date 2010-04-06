@@ -102,30 +102,53 @@ int test(int gracz, int *p)
 
 int menu(void)
 {
-    int tryb, i;
+    int tryb, i, exit=0;
+    int x = 10, y = 2, ch;	//s terowanie kursorem
+    initscr();
     WINDOW *menu;
     menu = newwin(6, 35, 10, 10);
+    keypad(menu,true);
     init_pair(1, COLOR_BLUE, COLOR_RED);
     wattrset(menu, COLOR_PAIR(1));
-    wrefresh(menu);
-/* kolorowanko menu, inaczej nie umiem ;p */
+    /* kolorowanko menu, inaczej nie umiem ;p */
     for (i = 0; i < 6 * 35; i++) {
 	wprintw(menu, " ");
     }
-    wrefresh(menu);
+
     mvwprintw(menu, 1, 2, "Wesola gra w kolko i krzyzyk.");
-    mvwprintw(menu, 2, 3, "single player - wcisnij 1");
-    mvwprintw(menu, 3, 3, "multiplayer - wcisnij 2");
-    wscanw(menu, "%d", &tryb);
-    /* sprawdzanie poprawności wyboru z menu */
-    while (1) {
-	if (tryb == 1 || tryb == 2) {
+    mvwprintw(menu, 2, 3, "single player ");
+    mvwprintw(menu, 3, 3, "multiplayer ");
+    wmove(menu, y, x);
+    while (exit < 1) {		// 0xa - enter
+	wrefresh(menu);
+	ch = wgetch(menu);
+	switch (ch) {
+	case KEY_UP:
+	    y--;
+	    wmove(menu, y, x);
 	    break;
-	} else {
-	    mvwprintw(menu, 4, 5, "Zla opcja, wybierz 1 lub 2");
-	    wscanw(menu, "%d", &tryb);
+	case KEY_DOWN:
+	    y++;
+	    wmove(menu, y, x);
+	    break;
+	case 0xa:
+	    getyx(menu, y, x);
+	    if (y == 2 || y == 3) {
+		exit = 1; //jak klikniemy enter w 3 lub 4 koumnie (single, multi) to zmienia flagę wyjścia na 1 i wychodzi z while
+	    }
+	    break;
+
+
+
 	}
     }
+    if (y == 2) {		//single player
+	tryb = 1;
+    }
+    if (y == 3) {
+	tryb = 2;
+    }
+
     return tryb;
 }
 void pc1(int *p)		//zrobilem z tego voida, bo nie musi zwracac wyniku, moze go od razu w funkcji zapisac
