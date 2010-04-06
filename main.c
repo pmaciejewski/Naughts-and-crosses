@@ -24,7 +24,7 @@ void rysuj(int *p)
 	    break;
 	}
     }
-    move(1,0);
+    move(1, 0);
     printw("%c|%c|%c\n", znak[0], znak[1], znak[2]);
     printw("-+-+-\n");
     printw("%c|%c|%c\n", znak[3], znak[4], znak[5]);
@@ -100,9 +100,34 @@ int test(int gracz, int *p)
     return win;
 }
 
-void menu() {
+int menu(void)
+{
+    int tryb, i;
+    WINDOW *menu;
+    menu = newwin(6, 35, 10, 10);
+    init_pair(1, COLOR_BLUE, COLOR_RED);
+    wattrset(menu, COLOR_PAIR(1));
+    wrefresh(menu);
+/* kolorowanko menu, inaczej nie umiem ;p */
+    for (i = 0; i < 6 * 35; i++) {
+	wprintw(menu, " ");
+    }
+    wrefresh(menu);
+    mvwprintw(menu, 1, 2, "Wesola gra w kolko i krzyzyk.");
+    mvwprintw(menu, 2, 3, "single player - wcisnij 1");
+    mvwprintw(menu, 3, 3, "multiplayer - wcisnij 2");
+    wscanw(menu, "%d", &tryb);
+    /* sprawdzanie poprawności wyboru z menu */
+    while (1) {
+	if (tryb == 1 || tryb == 2) {
+	    break;
+	} else {
+	    mvwprintw(menu, 4, 5, "Zla opcja, wybierz 1 lub 2");
+	    wscanw(menu, "%d", &tryb);
+	}
+    }
+    return tryb;
 }
-
 void pc1(int *p)		//zrobilem z tego voida, bo nie musi zwracac wyniku, moze go od razu w funkcji zapisac
 {
     int pole;
@@ -117,75 +142,56 @@ void pc1(int *p)		//zrobilem z tego voida, bo nie musi zwracac wyniku, moze go o
 }
 int main()
 {
-    const int ENTER = 0xa;
     int p1[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     int win = 0;
     int pole, remis, tryb, i;
-    int ch, x=2,y=2; //do operacji na kursorze
-    WINDOW *menu;
+    int ch, x = 2, y = 2;	//do operacji na kursorze
+
     initscr();
     cbreak();
-    keypad(stdscr,true); //do zabawy kursorem
-    menu = newwin(6, 35, 10, 10);
+    keypad(stdscr, true);	//do zabawy kursorem
     start_color();
-    init_pair(1, COLOR_BLUE, COLOR_RED);
-    wattrset(menu, COLOR_PAIR(1));
-    wrefresh(menu);
-/* kolorowanko menu, inaczej nie umiem ;p */
-    for (i = 0; i < 6 * 35; i++) {
-	wprintw(menu, " ");
-    }
     beep();
-    wrefresh(menu);
-    mvwprintw(menu, 1, 2, "Wesola gra w kolko i krzyzyk.");
-    mvwprintw(menu, 2, 3, "single player - wcisnij 1");
-    mvwprintw(menu, 3, 3, "multiplayer - wcisnij 2");
-    wscanw(menu, "%d", &tryb);
-    /* sprawdzanie poprawności wyboru z menu */
-    while (1){
-	if (tryb == 1 || tryb == 2) {
-	    break;
-	} else {
-	    mvwprintw(menu, 4, 5, "Zla opcja, wybierz 1 lub 2");
-	    wscanw(menu, "%d", &tryb);
-	}
-    }
-    while (remis < 9) {
-		rysuj(p1);
-		move(y,x);
 
-	while ((ch = getch()) != 0xa) { // 0xa - enter
-	ch = getch();
-		switch(ch) {
-			case KEY_LEFT:
-			x--;
-			move(y,x);
-			refresh();
-			break;
-			case KEY_RIGHT:
-	      		x++;
-			move(y,x);
-			refresh();
-			break;
-			case KEY_UP:
-			y--;
-			move(y,x);
-			refresh();
-			break;
-			case KEY_DOWN:
-			y++;
-			move(y,x);
-			refresh();
-			break;
-			case 0xa:
-			getyx(stdscr,x,y);// do rozkminienia
-			printw ("x = %d, y = %d", x,y);
-			refresh();
-			break;
-		}
-		
+    tryb = menu();
+
+
+    while (remis < 9) {
+	rysuj(p1);
+	move(y, x);
+
+	while ((ch = getch()) != 0xa) {	// 0xa - enter
+	    ch = getch();
+	    switch (ch) {
+	    case KEY_LEFT:
+		x--;
+		move(y, x);
+		refresh();
+		break;
+	    case KEY_RIGHT:
+		x++;
+		move(y, x);
+		refresh();
+		break;
+	    case KEY_UP:
+		y--;
+		move(y, x);
+		refresh();
+		break;
+	    case KEY_DOWN:
+		y++;
+		move(y, x);
+		refresh();
+		break;
+	    case 0xa:
+		getyx(stdscr, x, y);	// do rozkminienia
+		printw("x = %d, y = %d", x, y);
+		refresh();
+		break;
+	    }
+
 	}
-	printw ("x = %d, y = %d", x, y);
+	printw("x = %d, y = %d", x, y);
 	refresh();
 	rysuj(p1);
 	printw("Gracz 1, podaj pole [1-9]: ");
