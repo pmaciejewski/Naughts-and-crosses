@@ -24,12 +24,12 @@ void rysuj(int *p)
 	    break;
 	}
     }
-    move(1, 0);
-    printw("%c|%c|%c\n", znak[0], znak[1], znak[2]);
-    printw("-+-+-\n");
-    printw("%c|%c|%c\n", znak[3], znak[4], znak[5]);
-    printw("-+-+-\n");
-    printw("%c|%c|%c\n", znak[6], znak[7], znak[8]);
+
+    mvprintw(0,0,"%c|%c|%c\n", znak[0], znak[1], znak[2]);
+    mvprintw(1,0,"-+-+-\n");
+    mvprintw(2,0,"%c|%c|%c\n", znak[3], znak[4], znak[5]);
+    mvprintw(3,0,"-+-+-\n");
+    mvprintw(4,0,"%c|%c|%c\n", znak[6], znak[7], znak[8]);
 }
 
 /* wyczytywanie ruchu */
@@ -43,11 +43,11 @@ void wczytaj(int gracz, int pole, int *p)
 	if (gracz == 2) {
 	    *(p + pole - 1) = 2;
 	}
-    } else {
+    }/* else {
 	printw("Gracz %d! Złe pole, podaj jeszcze raz:", gracz);
 	scanw("%d", &pole);
 	wczytaj(gracz, pole, p);
-    }
+    }*/
 }
 
  /*sprawdzanie wygranej */
@@ -106,21 +106,23 @@ int menu(void)
     int x = 10, y = 2, ch;	//s terowanie kursorem
     initscr();
     WINDOW *menu;
-    menu = newwin(6, 35, 10, 10);
+    menu = newwin(7, 35, 10, 10);
     keypad(menu,true);
     init_pair(1, COLOR_BLUE, COLOR_RED);
     wattrset(menu, COLOR_PAIR(1));
     /* kolorowanko menu, inaczej nie umiem ;p */
-    for (i = 0; i < 6 * 35; i++) {
+    for (i = 0; i < 7 * 35; i++) {
 	wprintw(menu, " ");
     }
 
     mvwprintw(menu, 1, 2, "Wesola gra w kolko i krzyzyk.");
     mvwprintw(menu, 2, 3, "single player ");
     mvwprintw(menu, 3, 3, "multiplayer ");
+    mvwprintw(menu, 6, 3, "sterowanie: strzalki + enter");
     wmove(menu, y, x);
-    while (exit < 1) {		// 0xa - enter
-	wrefresh(menu);
+    //wybór z menu
+    while (exit < 1) {		
+        wrefresh(menu);
 	ch = wgetch(menu);
 	switch (ch) {
 	case KEY_UP:
@@ -167,8 +169,8 @@ int main()
 {
     int p1[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     int win = 0;
-    int pole, remis, tryb, i;
-    int ch, x = 2, y = 2;	//do operacji na kursorze
+    int pole, remis, tryb;
+    int ch, x = 2, y = 2, exit = 0;	//do operacji na kursorze
 
     initscr();
     cbreak();
@@ -182,8 +184,9 @@ int main()
     while (remis < 9) {
 	rysuj(p1);
 	move(y, x);
-
-	while ((ch = getch()) != 0xa) {	// 0xa - enter
+	exit = 0;
+	// jak juz bedzie dzialac to zrobic z tego funkcje zapisujaca pole wskaznikiem i mozna wywalic int wczytaj
+	while (exit<1) {	
 	    ch = getch();
 	    switch (ch) {
 	    case KEY_LEFT:
@@ -207,18 +210,52 @@ int main()
 		refresh();
 		break;
 	    case 0xa:
-		getyx(stdscr, x, y);	// do rozkminienia
-		printw("x = %d, y = %d", x, y);
-		refresh();
-		break;
+		getyx(stdscr, y, x);	// do rozkminienia
+		if (x == 0 && y == 0) {
+			pole = 1;
+			exit = 1;
+		}
+		else if ((x == 2) && (y == 0)) {
+			pole = 2;
+			exit = 1;
+		}
+		else if (x == 4 && y == 0) {
+			pole = 3;
+			exit = 1;
+		}
+		else if (x == 0 && y == 2) {
+			pole = 4;
+			exit = 1;
+		}
+		else if (x == 2 && y == 2) {
+			pole = 5;
+			exit = 1;
+		}
+		else if (x == 4 && y == 2) {
+			pole = 6;
+			exit = 1;
+		}
+		else if (x == 0 && y == 4) {
+			pole = 7;
+			exit = 1;
+		}
+		else if (x == 2 && y == 4) {
+			pole = 8;
+			exit = 1;
+		}
+		else if (x == 4 && y == 4) {
+			pole = 9;
+			exit = 1;
+		}
+				break;
 	    }
 
 	}
-	printw("x = %d, y = %d", x, y);
-	refresh();
-	rysuj(p1);
-	printw("Gracz 1, podaj pole [1-9]: ");
-	scanw("%d", &pole);
+	
+	//refresh();
+	//rysuj(p1);
+	//intw("Gracz 1, podaj pole [1-9]: ");
+	//scanw("%d", &pole);
 	wczytaj(1, pole, p1);
 	remis++;
 	if (remis == 9) {
