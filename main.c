@@ -160,7 +160,7 @@ void pc1(int *p)		//zrobilem z tego voida, bo nie musi zwracac wyniku, moze go o
     while (1) {			//jak dajesz while(0), to w ogole nie wchodzi do petli
 	pole = rand() % 9;
 	if (*(p + pole) == 0) {
-	    *(p + pole) = 2;	//p+pole-1, bo numerujemy od zera
+	    *(p + pole) = 2;	//p+pole, bo numerujemy od zera
 	    break;
 	}
     }
