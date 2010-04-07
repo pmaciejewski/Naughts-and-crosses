@@ -43,11 +43,11 @@ void wczytaj(int gracz, int pole, int *p)
 	if (gracz == 2) {
 	    *(p + pole - 1) = 2;
 	}
-    }/* else {
-	printw("Gracz %d! Złe pole, podaj jeszcze raz:", gracz);
+    } else {
+	mvprintw(5,0,"Gracz %d! Złe pole, podaj jeszcze raz:", gracz);
 	scanw("%d", &pole);
 	wczytaj(gracz, pole, p);
-    }*/
+    }
 }
 
  /*sprawdzanie wygranej */
@@ -174,6 +174,7 @@ int main()
 
     initscr();
     cbreak();
+    noecho();// ja jeeeeeeeeeeeeeeeeeeeeebie, działa! ;d
     keypad(stdscr, true);	//do zabawy kursorem
     start_color();
     beep();
@@ -183,11 +184,13 @@ int main()
 
     while (remis < 9) {
 	rysuj(p1);
-	move(y, x);
+
 	exit = 0;
-	// jak juz bedzie dzialac to zrobic z tego funkcje zapisujaca pole wskaznikiem i mozna wywalic int wczytaj
-	while (exit<1) {	
-	    ch = getch();
+	// todo: przeniesc to do funkcji wczytaj i zrobic sprawdzanie czy nie jest juz zajete pole
+	while (exit<1) {
+		move(y,x);
+		refresh();
+		ch = getch();
 	    switch (ch) {
 	    case KEY_LEFT:
 		x--;
@@ -210,7 +213,7 @@ int main()
 		refresh();
 		break;
 	    case 0xa:
-		getyx(stdscr, y, x);	// do rozkminienia
+		getyx(stdscr, y, x);	// y = wiersz kursora y = kolumna kursora
 		if (x == 0 && y == 0) {
 			pole = 1;
 			exit = 1;
@@ -248,17 +251,15 @@ int main()
 			exit = 1;
 		}
 				break;
-	    }
+			  }
 
 	}
 	
-	//refresh();
-	//rysuj(p1);
-	//intw("Gracz 1, podaj pole [1-9]: ");
-	//scanw("%d", &pole);
+
 	wczytaj(1, pole, p1);
 	remis++;
 	if (remis == 9) {
+
 	    printw("Remis\n");
 	    break;
 	}
@@ -291,10 +292,10 @@ int main()
 	refresh();
     }
     if (win == 1) {
-	printw("Gratulacje! Gracz 1, wygrałeś.\n");
+	mvprintw(5,0,"Gratulacje! Gracz 1, wygrałeś.\n");
     }
     if (win == 2) {
-	printw("Gratulacje! Gracz 2 wygrywa!\n");
+	mvprintw(5,0,"Gratulacje! Gracz 2 wygrywa!\n");
     }
     getch();
     endwin();
