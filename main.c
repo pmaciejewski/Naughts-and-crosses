@@ -158,9 +158,9 @@ void pc1(int *p)		//zrobilem z tego voida, bo nie musi zwracac wyniku, moze go o
     int pole;
     srand(time(NULL));
     while (1) {			//jak dajesz while(0), to w ogole nie wchodzi do petli
-	pole = rand() % 10;
-	if (*(p + pole - 1) == 0) {
-	    *(p + pole - 1) = 2;	//p+pole-1, bo numerujemy od zera
+	pole = rand() % 9;
+	if (*(p + pole) == 0) {
+	    *(p + pole) = 2;	//p+pole-1, bo numerujemy od zera
 	    break;
 	}
     }
