@@ -1,5 +1,9 @@
 TODO:
 
 -menu - DONE
--zapisywanie wynikow do plikow
--wczytywanie ruchu strzalkami i enterem
+-wczytywanie ruchu strzalkami i enterem - DONE
+-zapisywanie wynikow do pliku i ranking
+- uporzadkowac maina
+-przeniesienie wyboru ruchu do funkcji wczytaj
+
+-BUG: nie sygnalizuje wygranej dla srodkowej kolumny :O
