@@ -5,5 +5,7 @@ TODO:
 -zapisywanie wynikow do pliku i ranking
 - uporzadkowac maina
 -przeniesienie wyboru ruchu do funkcji wczytaj
+-f. test przerobic na wskazniki bez generowania dodatkowej, bezsensownej tablicy i zrobic voida z tego
+-losowanie trybu pracy komputera
 
 
