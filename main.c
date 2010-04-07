@@ -79,7 +79,7 @@ int test(int gracz, int *p)
 
     }
     // sprawdzanie kolumn 
-    for (i = 0; i < 3; i = i + 3) {
+    for (i = 0; i < 3; i++ ) {
 	win = ((win == 1) || ((znak[i] == gracz) && (znak[i + 3] == gracz)
 			      && (znak[i + 6] == gracz)));
     }
